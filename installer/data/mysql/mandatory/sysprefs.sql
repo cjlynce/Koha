@@ -744,6 +744,7 @@ INSERT INTO systempreferences ( `variable`, `value`, `options`, `explanation`, `
 ('ShelfBrowserUsesLocation','1','1','Use the item location when finding items for the shelf browser.','YesNo'),
 ('ShowAllCheckins', '0', '', 'Show all checkins', 'YesNo'),
 ('ShowComponentRecords', 'nowhere', 'nowhere|staff|opac|both','In which record detail pages to show list of the component records, as linked via 773','Choice'),
+('ShowFirstIfDifferentThanPreferred','0','','If ON, a patrons firstname will also show in results if different than their preferred name','YesNo'),
 ('ShowHeadingUse', '0', NULL, 'Show whether MARC21 authority record contains an established heading that conforms to descriptive cataloguing rules, and can therefore be used as a main/added entry, or subject, or series title', 'YesNo'),
 ('showLastPatron','0','','If ON, enables the last patron feature in the intranet','YesNo'),
 ('showLastPatronCount', '10', '', 'How many patrons should showLastPatron remember', 'Integer'),
