@@ -5,7 +5,8 @@
          * Format the patron response from a Koha RESTful API request.
          * @param  {Object}  patron  The patron json object as returned from the Koha RESTful API
          * @param  {Object}  config  A configuration object
-         *                           Valid keys are: `invert_name`, `display_cardnumber` and `url`
+         *                           Valid keys are: `invert_name`, `display_cardnumber`, `url`
+         *                           and `showlegal`.
          * @return {string}          The formatted HTML string
          */
         window.$patron_to_html = function (patron, config) {
@@ -22,13 +23,16 @@
             var firstname = escape_str(patron.firstname);
             var preferred_name = escape_str(patron.preferred_name);
             var surname = escape_str(patron.surname);
+            var showFirstIfDifferentThanPreferred = [% Koha.Preference('ShowFirstIfDifferentThanPreferred') | html %];
 
             if (patron.middle_name != null && patron.middle_name != "") {
                 firstname += " " + escape_str(patron.middle_name);
                 preferred_name += " " + escape_str(patron.middle_name);
             }
 
-            if (patron.other_name != null && patron.other_name != "") {
+            if (showFirstIfDifferentThanPreferred && config && config.showlegal && patron.preferred_name != patron.firstname) {
+                preferred_name += " [" + escape_str(patron.firstname) + "]";
+            } else if (patron.other_name != null && patron.other_name != "") {
                 firstname += " (" + escape_str(patron.other_name) + ")";
                 preferred_name += " (" + escape_str(patron.other_name) + ")";
             }

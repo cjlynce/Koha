@@ -595,9 +595,9 @@
                                         let patron_id = encodeURIComponent(row.patron_id);
                                         let r = '';
                                         [% IF ! open_on_row_click %]
-                                        r += "<a href=\"/cgi-bin/koha/members/moremember.pl?borrowernumber=" + patron_id + "\" class=\"patron_name\" data-borrowernumber=\"" + patron_id + "\" style=\"white-space:nowrap\">" + $patron_to_html(row, { invert_name: 1 }) + "</a>";
+                                        r += "<a href=\"/cgi-bin/koha/members/moremember.pl?borrowernumber=" + patron_id + "\" class=\"patron_name\" data-borrowernumber=\"" + patron_id + "\" style=\"white-space:nowrap\">" + $patron_to_html(row, { invert_name: 1, showlegal: 1 }) + "</a>";
                                         [% ELSE %]
-                                        r += $patron_to_html(row, { invert_name: 1 });
+                                        r += $patron_to_html(row, { invert_name: 1, showlegal: 1 });
                                         [% END %]
                                         r += '<br/>';
                                         r += '<div class="address"><ul>';
@@ -619,9 +619,9 @@
                                     "render": function( data, type, row, meta ) {
                                         let patron_id = encodeURIComponent(row.patron_id);
                                         [% IF ! open_on_row_click %]
-                                        return "<a href=\"/cgi-bin/koha/members/moremember.pl?borrowernumber=" + patron_id + "\" class=\"patron_name\" data-borrowernumber=\"" + patron_id + "\" style=\"white-space:nowrap\">" + $patron_to_html(row, { invert_name: 1 }) + "</a>";
+                                        return "<a href=\"/cgi-bin/koha/members/moremember.pl?borrowernumber=" + patron_id + "\" class=\"patron_name\" data-borrowernumber=\"" + patron_id + "\" style=\"white-space:nowrap\">" + $patron_to_html(row, { invert_name: 1, showlegal: 1 }) + "</a>";
                                         [% ELSE %]
-                                        return $patron_to_html(row, { invert_name: 1 });
+                                        return $patron_to_html(row, { invert_name: 1, showlegal: 1 });
                                         [% END %]
                                     }
                                 }

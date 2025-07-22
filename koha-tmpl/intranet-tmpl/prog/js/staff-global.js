@@ -790,8 +790,12 @@ function patron_autocomplete(node, options) {
                     " " +
                     (item.middle_name ? item.middle_name.escapeHtml() : "") +
                     " " +
-                    (item.other_name
-                        ? "(" + item.other_name.escapeHtml() + ")"
+                    (showFirstIfDifferentThanPreferred
+                        ? item.preferred_name != item.firstname
+                            ? "[" + item.firstname + "]"
+                            : item.other_name
+                              ? "(" + item.other_name.escapeHtml() + ")"
+                              : ""
                         : "") +
                     cardnumber.escapeHtml() +
                     " " +
