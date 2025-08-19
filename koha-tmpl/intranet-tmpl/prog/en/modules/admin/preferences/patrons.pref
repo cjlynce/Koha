@@ -111,6 +111,8 @@ Patrons:
                hold: "Placing a hold on an item"
                article: "Placing an article request"
                api_verify: "Patron authentication via API"
+               api_basic_auth: "REST API service uses Basic Authentication"
+               api_oauth2: "REST API service uses OAuth2 authentication"
      -
          - pref: AutoApprovePatronProfileSettings
            choices:

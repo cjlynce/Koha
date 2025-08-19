@@ -176,6 +176,9 @@ sub authenticate_api_request {
         if ($valid_token) {
             my $patron_id = Koha::ApiKeys->find( $valid_token->{client_id} )->patron_id;
             $user = Koha::Patrons->find($patron_id);
+
+            #record lastseen for API user using OAuth2
+            $user->update_lastseen('api_oauth2');
         } else {
 
             # If we have "Authorization: Bearer" header and oauth authentication
@@ -349,6 +352,9 @@ sub _basic_auth {
     if ( $patron->password_expired ) {
         Koha::Exceptions::Authorization::Unauthorized->throw( error => 'Password has expired' );
     }
+
+    #update lastseen for API user
+    $patron->update_lastseen('api_basic_auth');
 
     return $patron;
 }
