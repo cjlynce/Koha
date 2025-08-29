@@ -45,7 +45,7 @@ t::lib::Mocks::mock_preference( 'SessionStorage', 'tmp' );
 subtest 'token-based tests' => sub {
 
     if ( can_load( modules => { 'Net::OAuth2::AuthorizationServer' => undef } ) ) {
-        plan tests => 15;
+        plan tests => 16;
     } else {
         plan skip_all => 'Net::OAuth2::AuthorizationServer not available';
     }
@@ -109,6 +109,51 @@ subtest 'token-based tests' => sub {
     my $embed = $stash->{'koha.embed'};
     ok( defined $embed, 'The embed hashref is generated and stashed' );
     is_deeply( $embed, { fund => {} }, 'The embed data structure is correct' );
+
+    subtest 'TrackLastPatronActivityTriggers tests for api_oauth2' => sub {
+
+        plan tests => 6;
+
+        $patron->lastseen(undef)->store;
+
+        my $tx = $t->ua->build_tx( GET => '/api/v1/patrons' );
+        $tx->req->headers->authorization("Bearer $access_token");
+        $t->request_ok($tx);
+
+        is(
+            $patron->lastseen, undef,
+            "'lastseen' is undefined"
+        );
+
+        #set login in TrackLastPatronActivity_Triggers
+        t::lib::Mocks::mock_preference( 'TrackLastPatronActivityTriggers', 'login' );
+
+        $patron->lastseen(undef)->store;
+        $tx = $t->ua->build_tx( GET => '/api/v1/patrons' );
+        $tx->req->headers->authorization("Bearer $access_token");
+        $t->request_ok($tx);
+
+        $patron->discard_changes();
+        is(
+            $patron->lastseen, undef,
+            "'lastseen' untouched if 'api_oauth2' is not enabled in TrackLastPatronActivityTriggers"
+        );
+
+        #set api_oauth2 in in TrackLastPatronActivity_Triggers
+        t::lib::Mocks::mock_preference( 'TrackLastPatronActivityTriggers', 'api_oauth2' );
+
+        $patron->lastseen(undef)->store;
+        $tx = $t->ua->build_tx( GET => '/api/v1/patrons' );
+        $tx->req->headers->authorization("Bearer $access_token");
+        $t->request_ok($tx);
+
+        $patron->discard_changes();
+        ok(
+            $patron->lastseen,
+            "'lastseen' flag updated TrackLastPatronActivityTriggers includes 'api_oauth2'"
+        );
+
+    };
 
     $schema->storage->txn_rollback;
 };

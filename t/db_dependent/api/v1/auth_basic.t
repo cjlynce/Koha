@@ -33,7 +33,7 @@ my $t = Test::Mojo->new('Koha::REST::V1');
 
 subtest 'success tests' => sub {
 
-    plan tests => 2;
+    plan tests => 3;
 
     $schema->storage->txn_begin;
 
@@ -107,6 +107,48 @@ subtest 'success tests' => sub {
             '/error' => 'Authorization failure. Missing required permission(s).',
             'Error message returned'
             );
+    };
+
+    subtest 'TrackLastPatronActivityTriggers tests for api_basic_auth' => sub {
+
+        plan tests => 7;
+
+        $patron->flags( 2**4 )->store;
+
+        #set login in TrackLastPatronActivity_Triggers
+        t::lib::Mocks::mock_preference( 'TrackLastPatronActivityTriggers', 'login' );
+
+        $patron->lastseen(undef)->store;
+        $t->get_ok("//$cardnumber:$password@/api/v1/patrons");
+
+        $patron->discard_changes();
+        is(
+            $patron->lastseen, undef,
+            "'lastseen' untouched if 'api_basic_auth' is not enabled in TrackLastPatronActivityTriggers"
+        );
+
+        #set api_oauth2 in in TrackLastPatronActivity_Triggers
+        t::lib::Mocks::mock_preference( 'TrackLastPatronActivityTriggers', 'api_basic_auth' );
+
+        $patron->lastseen(undef)->store;
+        $t->get_ok("//$cardnumber:$password@/api/v1/patrons");
+        $patron->discard_changes();
+
+        ok(
+            $patron->lastseen,
+            "'lastseen' flag updated TrackLastPatronActivityTriggers includes 'api_basic_auth'"
+        );
+
+        $patron->lastseen(undef)->store;
+        $t->get_ok("//$cardnumber:basspassword@/api/v1/patrons")
+            ->status_is( 403, 'Basic Auth fails due to bad password' );
+        $patron->discard_changes();
+
+        is(
+            $patron->lastseen, undef,
+            "'lastseen' flag remains untouch due to Basic Auth authentication failure'"
+        );
+
     };
 
     $schema->storage->txn_rollback;
