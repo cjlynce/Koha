@@ -1263,6 +1263,7 @@ CREATE TABLE `borrower_attribute_types` (
   `keep_for_pseudonymization` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'defines if this field is copied to anonymized_borrower_attributes (1 for yes, 0 for no)',
   `mandatory` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'defines if the attribute is mandatory or not in the staff interface',
   `opac_mandatory` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'defines if the attribute is mandatory or not in the OPAC',
+  `staff_viewonly` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'defines if the attribute is view-only by staff in the staff interface',
   PRIMARY KEY (`code`),
   KEY `auth_val_cat_idx` (`authorised_value_category`),
   KEY `category_code` (`category_code`),
