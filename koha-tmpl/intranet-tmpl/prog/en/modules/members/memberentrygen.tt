@@ -1527,7 +1527,12 @@
                                                                     <label for="[% patron_attribute.form_id | html %]">[% patron_attribute.description | html %]: </label>
                                                                 [% END %]
                                                                 [% IF ( patron_attribute.use_dropdown ) %]
-                                                                    <select id="[% patron_attribute.form_id | html %]" name="[% patron_attribute.form_id | html %]" [% IF patron_attribute.mandatory %]required="required"[% END %]>
+                                                                    <select
+                                                                        id="[% patron_attribute.form_id | html %]"
+                                                                        name="[% patron_attribute.form_id | html %]"
+                                                                        [% IF patron_attribute.mandatory %]required="required"[% END %]
+                                                                        [% IF ( patron_attribute.viewonly AND !CAN_user_superlibrarian ) %]disabled[% END %]
+                                                                    >
                                                                         <option value=""></option>
                                                                         [% FOREACH auth_val_loo IN patron_attribute.auth_val_loop %]
                                                                             [% IF auth_val_loo.authorised_value == patron_attribute.value %]
@@ -1552,7 +1557,7 @@
                                                                             />
                                                                         [% ELSE %]
                                                                             <textarea rows="2" cols="30" id="[% patron_attribute.form_id | html %]" name="[% patron_attribute.form_id | html %]" required="required">
-[% patron_attribute.value | html %]</textarea
+                                                                            [% patron_attribute.value | html %]</textarea
                                                                             >
                                                                         [% END %]
                                                                     [% ELSE %]
@@ -1564,18 +1569,33 @@
                                                                                 maxlength="10"
                                                                                 size="10"
                                                                                 value="[% patron_attribute.value | html %]"
-                                                                                class="flatpickr"
+                                                                                [% IF ( patron_attribute.viewonly AND !CAN_user_superlibrarian ) -%]
+                                                                                    disabled
+                                                                                [%- ELSE -%]
+                                                                                    class="flatpickr"
+                                                                                [%- END %]
                                                                             />
                                                                         [% ELSE %]
-                                                                            <textarea rows="2" cols="30" id="[% patron_attribute.form_id | html %]" name="[% patron_attribute.form_id | html %]">[% patron_attribute.value | html %]</textarea>
+                                                                            <textarea
+                                                                                rows="2"
+                                                                                cols="30"
+                                                                                id="[% patron_attribute.form_id | html %]"
+                                                                                name="[% patron_attribute.form_id | html %]"
+                                                                                [% IF ( patron_attribute.viewonly AND !CAN_user_superlibrarian ) %]disabled[% END %]
+                                                                            >
+                                                                            [%- patron_attribute.value | html %]</textarea
+                                                                            >
                                                                         [% END %]
                                                                     [% END %]
                                                                 [% END # /IF ( patron_attribute.use_dropdown ) %]
+                                                                [% IF ( patron_attribute.viewonly AND !CAN_user_superlibrarian ) %]
+                                                                    <input type="hidden" id="[% patron_attribute.form_id | html %]" name="[% patron_attribute.form_id | html %]" value="[% patron_attribute.value | html %]" />
+                                                                [% END %]
                                                                 <input type="hidden" id="[% patron_attribute.form_id | html %]_code" name="[% patron_attribute.form_id | html %]_code" value="[% patron_attribute.code | html %]" />
-                                                                [% IF ( !patron_attribute.is_date ) %]
+                                                                [% IF ( !patron_attribute.is_date AND ( !patron_attribute.viewonly || CAN_user_superlibrarian ) ) %]
                                                                     <a href="#" class="clear_attribute"><i class="fa fa-fw fa-trash-can"></i> Clear</a>
                                                                 [% END %]
-                                                                [% IF ( patron_attribute.repeatable ) %]
+                                                                [% IF ( patron_attribute.repeatable AND ( !patron_attribute.viewonly || CAN_user_superlibrarian ) ) %]
                                                                     <a href="#" class="clone_attribute"><i class="fa fa-fw fa-plus"></i> New</a>
                                                                 [% END %]
                                                                 [% IF patron_attribute.mandatory %]<span class="required">Required</span>[% END %]

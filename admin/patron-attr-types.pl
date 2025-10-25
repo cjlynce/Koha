@@ -115,6 +115,7 @@ sub add_update_attribute_type {
     my $staff_searchable          = $input->param('staff_searchable')          ? 1 : 0;
     my $searched_by_default       = $input->param('searched_by_default')       ? 1 : 0;
     my $keep_for_pseudonymization = $input->param('keep_for_pseudonymization') ? 1 : 0;
+    my $staff_viewonly            = $input->param('staff_viewonly')            ? 1 : 0;
     my $mandatory                 = $input->param('mandatory')                 ? 1 : 0;
     my $opac_mandatory            = $input->param('opac_mandatory')            ? 1 : 0;
     my $authorised_value_category = $input->param('authorised_value_category');
@@ -152,6 +153,7 @@ sub add_update_attribute_type {
             staff_searchable          => $staff_searchable,
             searched_by_default       => $searched_by_default,
             keep_for_pseudonymization => $keep_for_pseudonymization,
+            staff_viewonly            => $staff_viewonly,
             mandatory                 => $mandatory,
             opac_mandatory            => $opac_mandatory,
             authorised_value_category => $authorised_value_category,
