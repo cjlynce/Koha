@@ -185,6 +185,15 @@
                         <span class="hint"> If checked, this field will be included in 'Standard' patron searches. Requires field to be marked as searchable above </span>
                     </li>
                     <li
+                        ><label for="staff_viewonly">View-only in Staff interface: </label>
+                        [% IF attribute_type AND attribute_type.staff_viewonly %]
+                            <input type="checkbox" id="staff_viewonly" name="staff_viewonly" checked="checked" />
+                        [% ELSE %]
+                            <input type="checkbox" id="staff_viewonly" name="staff_viewonly" />
+                        [% END %]
+                        <span class="hint">Check to make this attribute view-only, non-editable by staff in the staff interface.</span>
+                    </li>
+                    <li
                         ><label for="mandatory">Staff interface mandatory: </label>
                         [% IF attribute_type AND attribute_type.mandatory %]
                             <input type="checkbox" id="mandatory" name="mandatory" checked="checked" />
@@ -434,6 +443,16 @@
                     } else {
                         $("#opac_editable").attr("disabled", true).parent().attr("aria-disabled", "true");
                         $("#opac_mandatory").attr("disabled", true).parent().attr("aria-disabled", "true");
+                    }
+                })
+                .change();
+
+            $("#staff_viewonly")
+                .change(function () {
+                    if (this.checked) {
+                        $("#mandatory").attr("disabled", true).parent().attr("aria-disabled", "true");
+                    } else {
+                        $("#mandatory").removeAttr("disabled").parent().removeAttr("aria-disabled");
                     }
                 })
                 .change();
